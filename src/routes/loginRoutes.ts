@@ -14,17 +14,22 @@ function requestAuth(req: Request, res: Response, next: NextFunction): void {
 }
 
 const router = Router();
-router.get("/login", (req: Request, res: Response) => {
-  res.send(`
-  <form method="post">
-  <div><label for="">Email</label> <input type="text" name="email"/></div>
-  <div><label for="">Password</label> <input type="password" name="password"/></div>
-  <button>Submit</button>
-</form>
-  `);
+
+router.post("/login", (req: RequestWithBody, res: Response) => {
+  const { email, password } = req.body;
+
+  if (
+    email &&
+    password &&
+    email === "hi@higher.com" &&
+    password === "password"
+  ) {
+    req.session = { loggedIn: true };
+    res.redirect("/");
+  } else {
+    res.send("Invalid email or password");
+  }
 });
-
-
 
 router.get("/", (req: Request, res: Response) => {
   if (req.session && req.session.loggedIn) {
